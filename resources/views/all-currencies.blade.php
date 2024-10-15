@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Currency Rates</title>
+    <title>All Currencies Exchange Rates</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+
     <style>
         body {
             transition: background-color 0.5s, color 0.5s;
@@ -26,51 +27,51 @@
             font-size: 0.9rem; /* Ukuran font yang lebih kecil */
             z-index: 1000; /* Pastikan tombol di atas elemen lain */
         }
-        @media (max-width: 576px) {
-            /* Memastikan ukuran tombol dan teks di perangkat kecil */
-            #theme-toggle {
-                padding: 3px 7px;
-                font-size: 0.8rem;
-            }
-            h1 {
-                font-size: 1.5rem; /* Ukuran font judul lebih kecil di perangkat kecil */
-            }
-        }
     </style>
+
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">SGD Exchange Rates</h1>
+        <h1 class="text-center">All Currencies Exchange Rates</h1>
+        <a href="{{ route('sgd-rates') }}" class="btn btn-info mb-3">View SGD Exchange Rates</a>
 
-        <a href="{{ route('all-currencies') }}" class="btn btn-info mb-3">View All Currencies</a>
+        <!-- Form Pencarian -->
+        <form method="GET" action="{{ route('all-currencies') }}" class="mb-3">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search by ISO Currency Code" value="{{ request('search') }}">
+                </div>
+                <div class="col-12 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Search</button> <!-- Tombol memenuhi lebar pada perangkat kecil -->
+                </div>
+            </div>
+        </form>
 
-        <p class="text-muted"><small>Note: The last two columns are examples for calculation purposes only.</small></p>
-
-        <div class="table-responsive">
+        <div class="table-responsive"> <!-- Menjadikan tabel responsif -->
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>ISO Currency Code</th>
                         <th>Currency Name</th>
-                        <th>Exchange Rate</th>
-                        <th class="text-muted">*(Exchange Rate) × 2.00</th>
-                        <th class="text-muted">*(Exchange Rate) − 10.00</th>
+                        <th>Exchange Rate (SGD to Currency)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if($rates)
-                        @foreach($rates as $pair => $rate)
+                    @if($currencies && $rates)
+                        @foreach($currencies as $currencyCode => $currencyName)
                             <tr>
-                                <td>{{ $pair }}</td>
-                                <td>{{ $currencies[$pair] ?? 'N/A' }}</td>  <!-- Tampilkan nama currency -->
-                                <td>{{ number_format($rate, 2, '.', ',') }}</td>
-                                <td class="text-muted">{{ number_format($rate * 2, 2, '.', ',') }}</td>
-                                <td class="text-muted">{{ number_format($rate - 10, 2, '.', ',') }}</td>
+                                <td>{{ strtoupper($currencyCode) }}</td>
+                                <td>{{ $currencyName }}</td>
+                                @if(isset($rates[$currencyCode]))
+                                    <td>{{ number_format($rates[$currencyCode], 2, '.', ',') }}</td>
+                                @else
+                                    <td>N/A</td>
+                                @endif
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="5">No data available</td>
+                            <td colspan="3">No data available</td>
                         </tr>
                     @endif
                 </tbody>
