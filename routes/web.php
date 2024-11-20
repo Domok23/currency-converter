@@ -6,6 +6,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\AllCurrencyController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\SlideController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/currencies/sgd-rates', [CurrencyController::class, 'getSGDRates'])->name('sgd-rates');
 Route::get('/currencies/all', [AllCurrencyController::class, 'showAllCurrencies'])->name('all-currencies');
@@ -26,3 +27,7 @@ Route::resource('slides', SlideController::class)->names([
     'update' => 'slides.update',
     'destroy' => 'slides.destroy',
 ]);
+
+Route::resource('products', ProductController::class);
+
+Route::delete('/products/bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulkDelete');
