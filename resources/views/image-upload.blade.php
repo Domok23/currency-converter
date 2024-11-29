@@ -6,15 +6,17 @@
     <title>Upload Gambar</title>
     <style>
         #image-upload-area {
+            content: 'Paste image here...';
             border: 1px solid #ccc;
             padding: 20px;
             width: 300px;
             min-height: 100px;
             position: relative;
+            margin-top: 20px
         }
 
         #image-upload-area:empty::before {
-            content: 'Paste gambar Anda di sini';
+            content: 'Paste image here...';
             color: #aaa;
             position: absolute;
             top: 20px;
@@ -32,11 +34,11 @@
     </div>
 
     <!-- Tombol untuk meng-upload gambar -->
-    <button id="upload-button" style="margin-top: 20px;">Upload Gambar</button>
+    <button id="upload-button" style="margin-top: 20px;">Upload Image</button>
 
     <!-- Area untuk menampilkan gambar yang berhasil di-upload -->
     <div id="uploaded-images" style="margin-top: 20px;">
-        <h3>Gambar yang di-upload:</h3>
+        <h3>Uploaded image:</h3>
         <div id="image-container"></div>
     </div>
 
@@ -93,11 +95,11 @@
                         uploadArea.innerHTML = '';
                         pastedFile = null;
                     } else {
-                        alert('Gagal upload: ' + data.error);
+                        alert('Upload failure: ' + data.error);
                     }
                 });
             } else {
-                alert('Tidak ada gambar yang dipaste.');
+                alert('No images are pasted.');
             }
         });
     </script>
