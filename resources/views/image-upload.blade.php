@@ -6,7 +6,7 @@
     <title>Upload Gambar</title>
     <style>
         #image-upload-area {
-            content: 'Paste image here...';
+            content: 'Or Paste image here...';
             border: 1px solid #ccc;
             padding: 20px;
             width: 300px;
@@ -16,7 +16,7 @@
         }
 
         #image-upload-area:empty::before {
-            content: 'Paste image here...';
+            content: 'Or Paste image here...';
             color: #aaa;
             position: absolute;
             top: 20px;
