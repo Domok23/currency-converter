@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CurrencyController extends Controller
 {
@@ -26,11 +27,24 @@ class CurrencyController extends Controller
                 'RMB' => $data['sgd']['cny'] ?? null,
                 'MYR' => $data['sgd']['myr'] ?? null,
                 'USD' => $data['sgd']['usd'] ?? null,
+                'JPY' => $data['sgd']['jpy'] ?? null,
                 'SGD' => $data['sgd']['sgd'] ?? null, // Selalu 1
             ];
 
+            // Ambil daftar mata uang untuk mendapatkan nama mata uang
+            $currencyListUrl = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json';
+            $currencyResponse = Http::get($currencyListUrl);
+
+            if ($currencyResponse->successful()) {
+                $currencies = $currencyResponse->json();
+                Log::info('Currencies data:', $currencies); // Log data currencies
+            } else {
+                $currencies = [];
+                Log::error('Failed to fetch currencies data');
+            }
+
             // Kembalikan data ke tampilan
-            return view('currency-table', compact('rates'));
+            return view('currency-table', compact('rates', 'currencies'));
         } else {
             // Fallback jika API utama gagal, gunakan fallback URL
             $fallbackUrl = 'https://latest.currency-api.pages.dev/v1/currencies/sgd.json';
@@ -39,13 +53,28 @@ class CurrencyController extends Controller
             if ($fallbackResponse->successful()) {
                 $data = $fallbackResponse->json();
                 $rates = [
-                    'SGD to IDR' => $data['sgd']['idr'] ?? null,
-                    'SGD to RMB' => $data['sgd']['cny'] ?? null,
-                    'SGD to MYR' => $data['sgd']['myr'] ?? null,
-                    'SGD to USD' => $data['sgd']['usd'] ?? null,
-                    'SGD to SGD' => $data['sgd']['sgd'] ?? null, // Selalu 1
+                    'IDR' => $data['sgd']['idr'] ?? null,
+                    'RMB' => $data['sgd']['cny'] ?? null,
+                    'MYR' => $data['sgd']['myr'] ?? null,
+                    'USD' => $data['sgd']['usd'] ?? null,
+                    'JPY' => $data['sgd']['jpy'] ?? null,
+                    'SGD' => $data['sgd']['sgd'] ?? null, // Selalu 1
                 ];
-                return view('currency-table', compact('rates'));
+
+                // Ambil daftar mata uang untuk mendapatkan nama mata uang
+                $currencyListUrl = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json';
+                $currencyResponse = Http::get($currencyListUrl);
+
+                if ($currencyResponse->successful()) {
+                    $currencies = $currencyResponse->json();
+                    Log::info('Fallback currencies data:', $currencies); // Log data currencies
+                } else {
+                    $currencies = [];
+                    Log::error('Failed to fetch fallback currencies data');
+                }
+
+                // Kembalikan data ke tampilan
+                return view('currency-table', compact('rates', 'currencies'));
             } else {
                 // Kembalikan error jika API gagal
                 return response()->json(['error' => 'Unable to fetch currency data'], 500);
