@@ -3,31 +3,24 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\AllCurrencyController;
-use App\Http\Controllers\ImageUploadController;
-use App\Http\Controllers\SlideController;
-use App\Http\Controllers\ProductController;
 
-Route::get('/currencies/sgd-rates', [CurrencyController::class, 'getSGDRates'])->name('sgd-rates');
-Route::get('/currencies/all', [AllCurrencyController::class, 'showAllCurrencies'])->name('all-currencies');
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/image-upload', [ImageUploadController::class, 'index'])->name('image-upload');
-Route::post('/image-upload', [ImageUploadController::class, 'upload']);
+Route::get('/currency-converter', [CurrencyController::class, 'index']);
 
-Route::resource('slides', SlideController::class)->names([
-    'index' => 'slides.index',
-    'create' => 'slides.create',
-    'store' => 'slides.store',
-    'show' => 'slides.show',
-    'edit' => 'slides.edit',
-    'update' => 'slides.update',
-    'destroy' => 'slides.destroy',
-]);
-
-Route::resource('products', ProductController::class);
-
-Route::delete('/products/bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulkDelete');
+Route::get('/currencies/sgd-rates', [CurrencyController::class, 'getSGDRates']);
